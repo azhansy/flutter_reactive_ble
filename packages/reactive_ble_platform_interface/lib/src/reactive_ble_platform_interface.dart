@@ -92,6 +92,10 @@ abstract class ReactiveBlePlatform extends PlatformInterface {
         'readRssi(String deviceId) has not been implemented.');
   }
 
+  Future<bool> setPreferredPhy(String deviceId, int txPhy, int rxPhy, int phyOptions) {
+    throw UnimplementedError('setPreferredPhy has not been implemented.');
+  }
+
   /// Connects to a specific device and the connection remains `established` until
   /// the stream is `cancelled` or the connection is closed by the peripheral.
   ///

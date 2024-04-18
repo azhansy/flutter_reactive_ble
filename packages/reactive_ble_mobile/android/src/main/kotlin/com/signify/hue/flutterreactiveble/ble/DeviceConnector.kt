@@ -1,9 +1,14 @@
 package com.signify.hue.flutterreactiveble.ble
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.VisibleForTesting
+import com.polidea.rxandroidble2.PhyPair
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleCustomOperation
 import com.polidea.rxandroidble2.RxBleDevice
+import com.polidea.rxandroidble2.RxBlePhy
+import com.polidea.rxandroidble2.RxBlePhyOption
 import com.signify.hue.flutterreactiveble.model.ConnectionState
 import com.signify.hue.flutterreactiveble.model.toConnectionState
 import com.signify.hue.flutterreactiveble.utils.Duration
@@ -213,6 +218,15 @@ internal class DeviceConnector(
         currentConnection?.let { connection ->
             when (connection) {
                 is EstablishedConnection -> connection.rxConnection.readRssi()
+                is EstablishConnectionFailure -> Single.error(Throwable(connection.errorMessage))
+            }
+        } ?: Single.error(IllegalStateException("Connection is not established"))
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    internal fun setPreferredPhy(txPhy: Set<RxBlePhy>, rxPhy:Set<RxBlePhy>, phyOptions: RxBlePhyOption): Single<PhyPair> =
+        currentConnection?.let { connection ->
+            when (connection) {
+                is EstablishedConnection -> connection.rxConnection.setPreferredPhy(txPhy, rxPhy, phyOptions)
                 is EstablishConnectionFailure -> Single.error(Throwable(connection.errorMessage))
             }
         } ?: Single.error(IllegalStateException("Connection is not established"))

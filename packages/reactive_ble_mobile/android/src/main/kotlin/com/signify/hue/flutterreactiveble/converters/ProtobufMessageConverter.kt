@@ -3,6 +3,7 @@ package com.signify.hue.flutterreactiveble.converters
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattService
 import com.google.protobuf.ByteString
+import com.polidea.rxandroidble2.PhyPair
 import com.polidea.rxandroidble2.RxBleDeviceServices
 import com.signify.hue.flutterreactiveble.ble.ConnectionUpdateSuccess
 import com.signify.hue.flutterreactiveble.ble.MtuNegotiateFailed
@@ -191,6 +192,14 @@ class ProtobufMessageConverter {
             .setRssi(rssi)
             .build()
     }
+
+    fun convertSetPreferredPhyResult(phyPair: PhyPair): pb.SetPreferredPhyResult {
+        return pb.SetPreferredPhyResult.newBuilder()
+            .setTxPhy(phyPair.txPhy)
+            .setRxPhy(phyPair.rxPhy)
+            .build()
+    }
+
 
     private fun fromBluetoothGattService(gattService: BluetoothGattService): pb.DiscoveredService {
         return pb.DiscoveredService.newBuilder()

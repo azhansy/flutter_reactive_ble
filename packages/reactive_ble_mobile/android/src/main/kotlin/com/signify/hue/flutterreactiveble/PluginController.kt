@@ -40,6 +40,7 @@ class PluginController {
             "discoverServices" to this::discoverServices,
             "getDiscoveredServices" to this::discoverServices,
             "readRssi" to this::readRssi,
+            "setPreferredPhy" to this::setPreferredPhy,
         )
 
     private lateinit var bleClient: com.signify.hue.flutterreactiveble.ble.BleClient
@@ -385,6 +386,28 @@ class PluginController {
                 result.success(info.toByteArray())
             }, { error ->
                 result.error("read_rssi_error", error.message, null)
+            })
+            .discard()
+    }
+
+    private fun setPreferredPhy(
+        call: MethodCall,
+        result: Result,
+    ) {
+        val args = pb.SetPreferredPhyRequest.parseFrom(call.arguments as ByteArray)
+
+        bleClient.setPreferredPhy(
+            args.deviceId,
+            args.txPhy,
+            args.rxPhy,
+            args.phyOptions,
+        )
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ success ->
+                val info = protoConverter.convertSetPreferredPhyResult(success)
+                result.success(info.toByteArray())
+            }, { error ->
+                result.error("set_preferred_phy_error", error.message, null)
             })
             .discard()
     }

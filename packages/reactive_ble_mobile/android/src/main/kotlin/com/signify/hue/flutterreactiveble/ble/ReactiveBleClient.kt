@@ -5,14 +5,18 @@ import android.bluetooth.BluetoothGattCharacteristic
 import android.content.Context
 import android.os.Build
 import android.os.ParcelUuid
+import androidx.annotation.RequiresApi
 import androidx.annotation.VisibleForTesting
 import com.polidea.rxandroidble2.LogConstants
 import com.polidea.rxandroidble2.LogOptions
 import com.polidea.rxandroidble2.NotificationSetupMode
+import com.polidea.rxandroidble2.PhyPair
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleDevice
 import com.polidea.rxandroidble2.RxBleDeviceServices
+import com.polidea.rxandroidble2.RxBlePhy
+import com.polidea.rxandroidble2.RxBlePhyOption
 import com.polidea.rxandroidble2.scan.IsConnectable
 import com.polidea.rxandroidble2.scan.ScanFilter
 import com.polidea.rxandroidble2.scan.ScanSettings
@@ -393,6 +397,25 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                     )
             }
         }.firstOrError()
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun setPreferredPhy(
+        deviceId: String,
+        txPhy: Set<RxBlePhy>, rxPhy:Set<RxBlePhy>, phyOptions: RxBlePhyOption,
+    ): Single<PhyPair> =
+        getConnection(deviceId).flatMapSingle { connectionResult ->
+            when (connectionResult) {
+                is EstablishedConnection ->
+                    connectionResult.rxConnection.setPreferredPhy(txPhy, rxPhy, phyOptions)
+                is EstablishConnectionFailure ->
+                    Single.error(
+                        IllegalStateException(
+                            "Setting preferred phy failed. Device is not connected",
+                        ),
+                    )
+            }
+        }.firstOrError()
+
 
     // enable this for extra debug output on the android stack
     private fun enableDebugLogging() =

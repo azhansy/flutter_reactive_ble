@@ -1,7 +1,10 @@
 package com.signify.hue.flutterreactiveble.ble
 
 import android.os.ParcelUuid
+import com.polidea.rxandroidble2.PhyPair
 import com.polidea.rxandroidble2.RxBleDeviceServices
+import com.polidea.rxandroidble2.RxBlePhy
+import com.polidea.rxandroidble2.RxBlePhyOption
 import com.signify.hue.flutterreactiveble.model.ScanMode
 import com.signify.hue.flutterreactiveble.utils.Duration
 import io.reactivex.Completable
@@ -74,4 +77,9 @@ interface BleClient {
     ): Single<RequestConnectionPriorityResult>
 
     fun readRssi(deviceId: String): Single<Int>
+
+    fun setPreferredPhy(
+        deviceId: String,
+        txPhy: Set<RxBlePhy>, rxPhy: Set<RxBlePhy>, phyOptions: RxBlePhyOption,
+    ): Single<PhyPair>
 }
