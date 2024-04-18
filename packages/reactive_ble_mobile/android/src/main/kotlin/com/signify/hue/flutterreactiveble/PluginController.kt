@@ -1,6 +1,8 @@
 package com.signify.hue.flutterreactiveble
 
 import android.content.Context
+import com.polidea.rxandroidble2.RxBlePhy
+import com.polidea.rxandroidble2.RxBlePhyOption
 import com.signify.hue.flutterreactiveble.ble.RequestConnectionPriorityFailed
 import com.signify.hue.flutterreactiveble.channelhandlers.BleStatusHandler
 import com.signify.hue.flutterreactiveble.channelhandlers.CharNotificationHandler
@@ -396,15 +398,16 @@ class PluginController {
     ) {
         val args = pb.SetPreferredPhyRequest.parseFrom(call.arguments as ByteArray)
 
+        //0 = 1M, 1 = 2M, 2 = Coded(PHY_OPTION_S2) 3 Coded(PHY_OPTION_S8)
         bleClient.setPreferredPhy(
             args.deviceId,
-            args.txPhy,
-            args.rxPhy,
-            args.phyOptions,
+            setOf(if (args.txPhy == 0) RxBlePhy.PHY_1M else if (args.txPhy == 1) RxBlePhy.PHY_2M else RxBlePhy.PHY_CODED),
+            setOf(if (args.rxPhy == 0) RxBlePhy.PHY_1M else if (args.rxPhy == 1) RxBlePhy.PHY_2M else RxBlePhy.PHY_CODED),
+            if (args.phyOptions < 2) RxBlePhyOption.PHY_OPTION_NO_PREFERRED else if (args.phyOptions < 2) RxBlePhyOption.PHY_OPTION_S2 else RxBlePhyOption.PHY_OPTION_S8,
         )
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ success ->
-                val info = protoConverter.convertSetPreferredPhyResult(success)
+            .subscribe({ phyPair ->
+                val info = protoConverter.convertSetPreferredPhyResult(phyPair)
                 result.success(info.toByteArray())
             }, { error ->
                 result.error("set_preferred_phy_error", error.message, null)

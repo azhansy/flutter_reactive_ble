@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothGattService
 import com.google.protobuf.ByteString
 import com.polidea.rxandroidble2.PhyPair
 import com.polidea.rxandroidble2.RxBleDeviceServices
+import com.polidea.rxandroidble2.RxBlePhy
 import com.signify.hue.flutterreactiveble.ble.ConnectionUpdateSuccess
 import com.signify.hue.flutterreactiveble.ble.MtuNegotiateFailed
 import com.signify.hue.flutterreactiveble.ble.MtuNegotiateResult
@@ -195,8 +196,8 @@ class ProtobufMessageConverter {
 
     fun convertSetPreferredPhyResult(phyPair: PhyPair): pb.SetPreferredPhyResult {
         return pb.SetPreferredPhyResult.newBuilder()
-            .setTxPhy(phyPair.txPhy)
-            .setRxPhy(phyPair.rxPhy)
+            .setTxPhy(if (phyPair.txPhy == RxBlePhy.PHY_1M) 0 else if (phyPair.txPhy == RxBlePhy.PHY_2M) 1 else 3)
+            .setRxPhy(if (phyPair.rxPhy == RxBlePhy.PHY_1M) 0 else if (phyPair.rxPhy == RxBlePhy.PHY_2M) 1 else 3)
             .build()
     }
 

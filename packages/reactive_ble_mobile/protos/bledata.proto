@@ -154,6 +154,18 @@ message ReadRssiResult {
     int32 rssi = 1;
 }
 
+message SetPreferredPhyRequest {
+    string deviceId = 1;
+    int32 txPhy = 2;
+    int32 rxPhy = 3;
+    int32 phyOptions = 4;
+}
+
+message SetPreferredPhyResult {
+    int32 txPhy = 1;
+    int32 rxPhy = 2;
+}
+
 message Uuid {
     bytes data = 1;
 }
