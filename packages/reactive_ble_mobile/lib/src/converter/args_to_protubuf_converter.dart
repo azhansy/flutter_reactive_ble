@@ -50,7 +50,7 @@ abstract class ArgsToProtobufConverter {
 
   pb.ReadRssiRequest createReadRssiRequest(String deviceId);
 
-  pb.SetPreferredPhyRequest createPreferredPhyRequest(String deviceId, int phy);
+  pb.SetPreferredPhyRequest createPreferredPhyRequest(String deviceId, int txPhy, int rxPhy, int phyOptions);
 }
 
 class ArgsToProtobufConverterImpl implements ArgsToProtobufConverter {
@@ -218,12 +218,12 @@ class ArgsToProtobufConverterImpl implements ArgsToProtobufConverter {
   }
 
   @override
-  pb.SetPreferredPhyRequest createPreferredPhyRequest(String deviceId, int phy) {
+  pb.SetPreferredPhyRequest createPreferredPhyRequest(String deviceId, int txPhy, int rxPhy, int phyOptions) {
     final args = pb.SetPreferredPhyRequest()
       ..deviceId = deviceId
-      ..txPhy = phy
-      ..rxPhy = phy
-      ..phyOptions = phy;
+      ..txPhy = txPhy
+      ..rxPhy = rxPhy
+      ..phyOptions = phyOptions;
     return args;
   }
 }

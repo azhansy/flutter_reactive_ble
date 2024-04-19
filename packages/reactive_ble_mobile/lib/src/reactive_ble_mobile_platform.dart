@@ -318,7 +318,7 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
       .invokeMethod<List<int>>(
         "setPreferredPhy",
         _argsToProtobufConverter
-            .createPreferredPhyRequest(deviceId, txPhy)
+            .createPreferredPhyRequest(deviceId, txPhy, rxPhy, phyOptions)
             .writeToBuffer(),
       )
       .then((data) => _protobufConverter.setPreferredPhy(data!));
