@@ -7,12 +7,14 @@ class BleDeviceInteractor {
     required Future<List<Service>> Function(String deviceId) bleDiscoverServices,
     required void Function(String message) logMessage,
     required this.readRssi,
+    required this.setPreferredPhy,
   })  : _bleDiscoverServices = bleDiscoverServices,
         _logMessage = logMessage;
 
   final Future<List<Service>> Function(String deviceId) _bleDiscoverServices;
 
   final Future<int> Function(String deviceId) readRssi;
+  final Future<int> Function(String deviceId,int phy) setPreferredPhy;
 
   final void Function(String message) _logMessage;
 

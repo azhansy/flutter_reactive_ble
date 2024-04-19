@@ -312,6 +312,16 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
             .writeToBuffer(),
       )
       .then((data) => _protobufConverter.readRssiResultFrom(data!));
+
+  @override
+  Future<int> setPreferredPhy(String deviceId, int txPhy, int rxPhy, int phyOptions) async => _bleMethodChannel
+      .invokeMethod<List<int>>(
+        "setPreferredPhy",
+        _argsToProtobufConverter
+            .createPreferredPhyRequest(deviceId, txPhy)
+            .writeToBuffer(),
+      )
+      .then((data) => _protobufConverter.setPreferredPhy(data!));
 }
 
 class ReactiveBleMobilePlatformFactory {

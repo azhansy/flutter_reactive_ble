@@ -14,6 +14,7 @@ abstract class $DeviceInteractionViewModel {
   DeviceConnectionState get connectionStatus;
   BleDeviceConnector get deviceConnector;
   Future<int> Function() get readRssi;
+  Future<int> Function(int phy) get setPreferredPhy;
   Future<List<Service>> Function() get discoverServices;
 
   DeviceInteractionViewModel copyWith({
@@ -22,6 +23,7 @@ abstract class $DeviceInteractionViewModel {
     DeviceConnectionState? connectionStatus,
     BleDeviceConnector? deviceConnector,
     Future<int> Function()? readRssi,
+    Future<int> Function(int phy)? setPreferredPhy,
     Future<List<Service>> Function()? discoverServices,
   }) =>
       DeviceInteractionViewModel(
@@ -30,6 +32,7 @@ abstract class $DeviceInteractionViewModel {
         connectionStatus: connectionStatus ?? this.connectionStatus,
         deviceConnector: deviceConnector ?? this.deviceConnector,
         readRssi: readRssi ?? this.readRssi,
+        setPreferredPhy: setPreferredPhy ?? this.setPreferredPhy,
         discoverServices: discoverServices ?? this.discoverServices,
       );
 
@@ -41,6 +44,7 @@ abstract class $DeviceInteractionViewModel {
       this.connectionStatus,
       this.deviceConnector,
       this.readRssi,
+      this.setPreferredPhy,
       this.discoverServices,
     );
     mutator(change);
@@ -50,6 +54,7 @@ abstract class $DeviceInteractionViewModel {
       connectionStatus: change.connectionStatus,
       deviceConnector: change.deviceConnector,
       readRssi: change.readRssi,
+      setPreferredPhy: change.setPreferredPhy,
       discoverServices: change.discoverServices,
     );
   }
@@ -68,6 +73,7 @@ abstract class $DeviceInteractionViewModel {
       connectionStatus == other.connectionStatus &&
       deviceConnector == other.deviceConnector &&
       readRssi == other.readRssi &&
+      setPreferredPhy == other.setPreferredPhy &&
       const Ignore().equals(discoverServices, other.discoverServices);
 
   @override
@@ -79,6 +85,7 @@ abstract class $DeviceInteractionViewModel {
     result = 37 * result + connectionStatus.hashCode;
     result = 37 * result + deviceConnector.hashCode;
     result = 37 * result + readRssi.hashCode;
+    result = 37 * result + setPreferredPhy.hashCode;
     result = 37 * result + const Ignore().hash(discoverServices);
     return result;
   }
@@ -91,6 +98,7 @@ class DeviceInteractionViewModel$Change {
     this.connectionStatus,
     this.deviceConnector,
     this.readRssi,
+    this.setPreferredPhy,
     this.discoverServices,
   );
 
@@ -99,6 +107,7 @@ class DeviceInteractionViewModel$Change {
   DeviceConnectionState connectionStatus;
   BleDeviceConnector deviceConnector;
   Future<int> Function() readRssi;
+  Future<int> Function(int phy) setPreferredPhy;
   Future<List<Service>> Function() discoverServices;
 }
 

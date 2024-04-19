@@ -30,6 +30,7 @@ void main() {
     },
     logMessage: _bleLogger.addToLog,
     readRssi: _ble.readRssi,
+    setPreferredPhy: (String deviceId,int phy) => _ble.setPreferredPhy(deviceId, phy, phy, phy),
   );
   runApp(
     MultiProvider(

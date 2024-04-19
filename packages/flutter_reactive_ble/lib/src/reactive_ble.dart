@@ -404,7 +404,7 @@ class FlutterReactiveBle {
   Future<int> readRssi(String deviceId) async =>
       _blePlatform.readRssi(deviceId);
 
-  Future<bool> setPreferredPhy(String deviceId, int txPhy, int rxPhy, int phyOptions) async =>
+  Future<int> setPreferredPhy(String deviceId, int txPhy, int rxPhy, int phyOptions) async =>
       _blePlatform.setPreferredPhy(deviceId, txPhy, rxPhy, phyOptions);
 
   /// Subscribes to updates from the characteristic specified.

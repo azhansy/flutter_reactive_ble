@@ -29,6 +29,7 @@ class DeviceInteractionTab extends StatelessWidget {
             deviceConnector: deviceConnector,
             discoverServices: () => serviceDiscoverer.discoverServices(device.id),
             readRssi: () => serviceDiscoverer.readRssi(device.id),
+            setPreferredPhy: (phy) => serviceDiscoverer.setPreferredPhy(device.id, phy),
           ),
         ),
       );
@@ -44,6 +45,7 @@ class DeviceInteractionViewModel extends $DeviceInteractionViewModel {
     required this.deviceConnector,
     required this.discoverServices,
     required this.readRssi,
+    required this.setPreferredPhy,
   });
 
   final String deviceId;
@@ -51,6 +53,7 @@ class DeviceInteractionViewModel extends $DeviceInteractionViewModel {
   final DeviceConnectionState connectionStatus;
   final BleDeviceConnector deviceConnector;
   final Future<int> Function() readRssi;
+  final Future<int> Function(int phy) setPreferredPhy;
 
   @CustomEquality(Ignore())
   final Future<List<Service>> Function() discoverServices;
@@ -82,6 +85,7 @@ class _DeviceInteractionTabState extends State<_DeviceInteractionTab> {
   late List<Service> discoveredServices;
 
   int _rssi = 0;
+  int _phy = 0;
 
   @override
   void initState() {
@@ -100,6 +104,13 @@ class _DeviceInteractionTabState extends State<_DeviceInteractionTab> {
     final rssi = await widget.viewModel.readRssi();
     setState(() {
       _rssi = rssi;
+    });
+  }
+
+  Future<void> setPreferredPhy(int phy) async {
+    final phy1 = await widget.viewModel.setPreferredPhy(phy);
+    setState(() {
+      _phy = phy1;
     });
   }
 
@@ -138,6 +149,13 @@ class _DeviceInteractionTabState extends State<_DeviceInteractionTab> {
                   ),
                 ),
                 Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 16.0),
+                  child: Text(
+                    "PHY: $_phy",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
                   padding: const EdgeInsets.only(top: 16.0),
                   child: Wrap(
                     alignment: WrapAlignment.spaceEvenly,
@@ -155,10 +173,20 @@ class _DeviceInteractionTabState extends State<_DeviceInteractionTab> {
                         child: const Text("Discover Services"),
                       ),
                       ElevatedButton(
-                        onPressed: widget.viewModel.deviceConnected
-                            ? readRssi
-                            : null,
+                        onPressed: widget.viewModel.deviceConnected ? readRssi : null,
                         child: const Text("Get RSSI"),
+                      ),
+                      ElevatedButton(
+                        onPressed: widget.viewModel.deviceConnected ? () => setPreferredPhy(0) : null,
+                        child: const Text("SET 1M PHY"),
+                      ),
+                      ElevatedButton(
+                        onPressed: widget.viewModel.deviceConnected ? () => setPreferredPhy(1) : null,
+                        child: const Text("SET 2M PHY"),
+                      ),
+                      ElevatedButton(
+                        onPressed: widget.viewModel.deviceConnected ? () => setPreferredPhy(2) : null,
+                        child: const Text("SET S2 PHY"),
                       ),
                     ],
                   ),

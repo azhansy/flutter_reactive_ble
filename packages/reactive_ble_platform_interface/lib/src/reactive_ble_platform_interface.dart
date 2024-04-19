@@ -92,7 +92,7 @@ abstract class ReactiveBlePlatform extends PlatformInterface {
         'readRssi(String deviceId) has not been implemented.');
   }
 
-  Future<bool> setPreferredPhy(String deviceId, int txPhy, int rxPhy, int phyOptions) {
+  Future<int> setPreferredPhy(String deviceId, int txPhy, int rxPhy, int phyOptions) {
     throw UnimplementedError('setPreferredPhy has not been implemented.');
   }
 
